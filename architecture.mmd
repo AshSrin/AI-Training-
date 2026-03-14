@@ -1,0 +1,30 @@
+flowchart LR
+  Browser[Browser UI]
+  FrontendApp[React Frontend (recruitbot-web / public)]
+  API[HTTP API]
+  Server[Express Server (src/server.ts)]
+  Ingest[Ingestion Pipeline (loaders, parsers)]
+  Retrieval[Retrieval Pipeline (hybrid/vector/keyword)]
+  Reranker[LLM Reranker (optional)]
+  Memory[Chat Memory]
+  VectorStore[Vector Store (MongoDBAtlasVectorSearch)]
+  MongoDB[(MongoDB Atlas)]
+  Models[LLM Providers (groq / openai / anthropic / mistralai)]
+  DocumentStorage[Uploads / documents/]
+
+  Browser --> FrontendApp
+  FrontendApp -->|API calls| API
+  API --> Server
+  Server --> Ingest
+  Server --> Retrieval
+  Server --> Memory
+  Ingest --> DocumentStorage
+  Ingest --> VectorStore
+  Retrieval --> VectorStore
+  Retrieval --> Reranker
+  Reranker --> Models
+  Retrieval --> Models
+  VectorStore --> MongoDB
+  Server -->|uses| Models
+
+  %% simplified: removed classDef styling to avoid syntax issues in some mermaid versions
